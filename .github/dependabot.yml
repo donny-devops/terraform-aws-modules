@@ -1,0 +1,21 @@
+version: 2
+updates:
+  - package-ecosystem: terraform
+    directory: "/modules/vpc"
+    schedule:
+      interval: weekly
+
+  - package-ecosystem: terraform
+    directory: "/modules/ecs"
+    schedule:
+      interval: weekly
+
+  - package-ecosystem: terraform
+    directory: "/modules/rds"
+    schedule:
+      interval: weekly
+
+  - package-ecosystem: github-actions
+    directory: "/"
+    schedule:
+      interval: weekly
