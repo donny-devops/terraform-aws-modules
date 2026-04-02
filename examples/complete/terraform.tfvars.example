@@ -1,0 +1,11 @@
+# Copy this file to terraform.tfvars and fill in your values.
+# Never commit terraform.tfvars — it may contain sensitive values.
+
+aws_region   = "us-east-1"
+project_name = "myapp"
+environment  = "development"
+vpc_cidr     = "10.0.0.0/16"
+
+# Optional — leave commented out to skip custom domain / Route53 / ACM setup.
+# domain_name    = "example.com"
+# hosted_zone_id = "Z1234567890ABC"
