@@ -1,4 +1,4 @@
-# AWS Terraform Modules
+# Terraform AWS Modules
 
 A collection of **reusable, opinionated Terraform modules** for provisioning AWS infrastructure in a consistent, composable way.
 
