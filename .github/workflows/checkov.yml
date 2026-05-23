@@ -1,0 +1,25 @@
+name: Checkov Security Scan
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  checkov:
+    name: Run Checkov
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Run Checkov scan
+        id: checkov
+        uses: bridgecrewio/checkov-action@master
+        with:
+          directory: .
+          framework: terraform 
+          # Optional: You can set a soft fail so the pipeline doesn't break on low-severity issues
+          # soft_fail: true
