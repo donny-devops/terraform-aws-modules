@@ -17,7 +17,7 @@ jobs:
 
       - name: Run Checkov scan
         id: checkov
-        uses: bridgecrewio/checkov-action@master
+        uses: bridgecrewio/checkov-action@v12.2867.0
         with:
           directory: .
           framework: terraform 
