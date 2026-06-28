@@ -23,6 +23,6 @@ jobs:
         uses: bridgecrewio/checkov-action@v12.2867.0
         with:
           directory: .
-          framework: terraform 
+          framework: terraform
           # Optional: You can set a soft fail so the pipeline doesn't break on low-severity issues
           # soft_fail: true
