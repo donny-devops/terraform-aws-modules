@@ -23,3 +23,7 @@ jobs:
           framework: terraform 
           # Optional: You can set a soft fail so the pipeline doesn't break on low-severity issues
           # soft_fail: true
+          permissions:
+  contents: read
+  security-events: write
+
