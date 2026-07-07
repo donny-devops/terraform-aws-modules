@@ -1,5 +1,11 @@
 # Terraform AWS Modules
 
+[![Security Hygiene](https://github.com/donny-devops/terraform-aws-modules/actions/workflows/security-hygiene.yml/badge.svg)](https://github.com/donny-devops/terraform-aws-modules/actions/workflows/security-hygiene.yml)
+[![Terraform](https://img.shields.io/badge/Terraform-1.x-7B42BC?logo=terraform&logoColor=white)](https://www.terraform.io/)
+[![AWS](https://img.shields.io/badge/AWS-Cloud-232F3E?logo=amazonaws&logoColor=white)](https://aws.amazon.com/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+
+
 A collection of **reusable, opinionated Terraform modules** for provisioning AWS infrastructure in a consistent, composable way.
 
 ## Overview
