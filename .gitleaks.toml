@@ -1,0 +1,9 @@
+[extend]
+useDefault = true
+
+[whitelist]
+description = "Ignore example AWS IDs and terraform variables"
+paths = [
+  '''examples/.*''',
+  '''modules/.*'''
+]

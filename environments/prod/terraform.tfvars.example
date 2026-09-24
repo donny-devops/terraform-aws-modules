@@ -1,0 +1,13 @@
+aws_region      = "us-east-1"
+project_name    = "cloud-app"
+environment     = "prod"
+vpc_cidr        = "10.100.0.0/16"
+container_image = "123456789012.dkr.ecr.us-east-1.amazonaws.com/cloud-app:v1.0.0"
+container_port  = 80
+certificate_arn = "arn:aws:acm:us-east-1:123456789012:certificate/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+
+tags = {
+  CostCenter = "Production-Ops"
+  Compliance = "PCI-DSS"
+  Owner      = "Infrastructure-Core"
+}

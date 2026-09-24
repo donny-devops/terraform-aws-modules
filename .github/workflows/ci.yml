@@ -1,0 +1,142 @@
+name: Terraform CI & Security Quality Gate
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pull-requests: read
+  security-events: write
+
+jobs:
+  format-and-lint:
+    name: Format & TFLint Check
+    runs-on: ubuntu-latest
+    steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@fa2e9d605c4eeb9fcad4c99c224cee0c6c7f3594 # v2.16.0
+        with:
+          egress-policy: audit
+
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: "1.7.5"
+
+      - name: Terraform Format Check
+        run: terraform fmt -check -recursive -diff
+
+      - name: Setup TFLint
+        uses: terraform-linters/setup-tflint@v4
+        with:
+          tflint_version: "v0.50.3"
+
+      - name: Initialize & Run TFLint
+        run: |
+          tflint --init
+          tflint -f compact --recursive
+
+  syntax-check:
+    name: Static Python HCL Validation
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Run validate_terraform.py
+        run: python tests/validate_terraform.py
+
+  validate-stacks:
+    name: Validate Matrix (${{ matrix.directory }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        directory:
+          - "bootstrap"
+          - "modules/container-service"
+          - "modules/serverless-api"
+          - "modules/static-website-cdn"
+          - "modules/vpc"
+          - "modules/wafv2-secops"
+          - "environments/dev"
+          - "environments/prod"
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: "1.7.5"
+
+      - name: Terraform Init & Validate
+        run: |
+          cd ${{ matrix.directory }}
+          terraform init -backend=false
+          terraform validate
+
+  unit-tests:
+    name: Native Terraform Unit Tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: "1.7.5"
+
+      - name: Run Unit Tests on Bootstrap Stack
+        run: |
+          cd bootstrap
+          terraform init -backend=false
+          terraform test -test-directory=../tests -filter=validate_bootstrap
+
+      - name: Run Unit Tests on Container Service Module
+        run: |
+          cd modules/container-service
+          terraform init -backend=false
+          terraform test -test-directory=../../tests -filter=validate_container_service
+
+      - name: Run Unit Tests on Environments
+        run: |
+          cd environments/dev
+          terraform init -backend=false
+          terraform test -test-directory=../../tests -filter=validate_dev
+
+  security-scan:
+    name: Trivy & Secret Detection
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Run Trivy Security Vulnerability Scanner
+        uses: aquasecurity/trivy-action@master
+        with:
+          scan-type: "config"
+          hide-progress: true
+          format: "table"
+          exit-code: "0" # Audit mode for PR feedback
+          severity: "CRITICAL,HIGH"
+
+      - name: Gitleaks Secret Detector
+        uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
