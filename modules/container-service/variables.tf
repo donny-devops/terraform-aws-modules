@@ -134,6 +134,17 @@ variable "target_group_arn" {
   }
 }
 
+variable "ingress_source_security_group_id" {
+  description = "Security group allowed to reach the task port (typically the ALB). Task ingress is never opened to 0.0.0.0/0."
+  type        = string
+  nullable    = false
+
+  validation {
+    condition     = can(regex("^sg-[0-9a-f]{8,17}$", var.ingress_source_security_group_id))
+    error_message = "ingress_source_security_group_id must be an AWS security group id (sg-...), not a CIDR."
+  }
+}
+
 variable "security_group_ids" {
   description = "Security group IDs to associate with the ECS task ENIs."
   type        = list(string)

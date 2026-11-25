@@ -162,8 +162,9 @@ module "container_app" {
   desired_count      = 4
   min_capacity       = 2
   max_capacity       = 20
-  target_group_arn   = module.alb.target_groups["ecs_prod_app"].arn
-  enable_autoscaling = true
+  target_group_arn                 = module.alb.target_groups["ecs_prod_app"].arn
+  ingress_source_security_group_id = module.alb_sg.security_group_id
+  enable_autoscaling               = true
 
   environment_variables = {
     ENVIRONMENT = var.environment

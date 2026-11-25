@@ -8,8 +8,9 @@ variables {
   subnet_ids       = ["subnet-11111111", "subnet-22222222"]
   container_image  = "public.ecr.aws/docker/library/httpd:alpine"
   container_port   = 80
-  target_group_arn = "arn:aws:elasticloadbalancing:us-east-1:123456789012:targetgroup/test-tg/1234567890123456"
-  desired_count    = 2
+  target_group_arn                 = "arn:aws:elasticloadbalancing:us-east-1:123456789012:targetgroup/test-tg/1234567890123456"
+  ingress_source_security_group_id = "sg-0123456789abcdef0"
+  desired_count                    = 2
   min_capacity     = 1
   max_capacity     = 6
 }
@@ -25,6 +26,11 @@ run "validate_container_service_defaults" {
   assert {
     condition     = var.desired_count == 2
     error_message = "Default task desired count should be 2"
+  }
+
+  assert {
+    condition     = can(regex("^sg-", var.ingress_source_security_group_id)) && var.ingress_source_security_group_id != "0.0.0.0/0"
+    error_message = "Task ingress must be a security group id, not 0.0.0.0/0"
   }
 
   assert {

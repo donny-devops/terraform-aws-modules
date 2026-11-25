@@ -91,12 +91,12 @@ module "ecs" {
 
       security_group_rules = {
         alb_ingress = {
-          type        = "ingress"
-          from_port   = var.container_port
-          to_port     = var.container_port
-          protocol    = "tcp"
-          description = "Allow inbound from ALB"
-          cidr_blocks = ["0.0.0.0/0"] # Restricted at ALB level or through dedicated SG
+          type                     = "ingress"
+          from_port                = var.container_port
+          to_port                  = var.container_port
+          protocol                 = "tcp"
+          description              = "Allow inbound only from the load balancer security group"
+          source_security_group_id = var.ingress_source_security_group_id
         }
         egress_all = {
           type        = "egress"
