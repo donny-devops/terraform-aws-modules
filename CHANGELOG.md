@@ -1,58 +1,19 @@
 # Changelog
 
-All notable changes to this project will be documented in this file.
+All notable changes to the Terraform AWS Modules collection will be documented in this file.
 
-The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
-and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
 ### Added
-- Initial release with core functionality
-- Comprehensive documentation
-- CI/CD pipeline with security scanning
-- Docker support
+- Tailored CONTRIBUTING.md for Terraform conventions
+- Polished README with clearer structure and MIT license confirmation
 
-### Changed
-- N/A
-
-### Deprecated
-- N/A
-
-### Removed
-- N/A
-
-### Fixed
-- N/A
-
-### Security
-- Added security scanning with Trivy and Gitleaks
-- Implemented harden-runner for supply chain security
-
----
-
-## Release Notes Format
-
-```markdown
-## [X.Y.Z] - YYYY-MM-DD
+## [Initial] - 2026-03-29
 
 ### Added
-- New features
-
-### Changed  
-- Changes in existing functionality
-
-### Deprecated
-- Soon-to-be removed features
-
-### Removed
-- Removed features
-
-### Fixed
-- Bug fixes
-
-### Security
-- Security fixes and improvements
-```
-
-[Unreleased]: https://github.com/donny-devops/terraform-aws-modules/compare/vX.Y.Z...HEAD
+- Core modules for networking (VPC, subnets, endpoints), security (IAM roles/policies, security groups), compute (EC2, ASG, ECS), storage (S3, RDS, DynamoDB), and observability (CloudWatch)
+- Example root modules (single-vpc, ecs-service, static-site-s3-cloudfront)
+- Environment structure for dev/stage/prod
+- Security hygiene workflow
