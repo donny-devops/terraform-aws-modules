@@ -1,45 +1,80 @@
 variable "name" {
   description = "Name prefix applied to all resources."
   type        = string
+
+  validation {
+    condition     = length(trimspace(var.name)) > 0
+    error_message = "name must be a non-empty string."
+  }
 }
 
-# ── S3 ────────────────────────────────────────────────────────────────────────
+# ── S3 ──────────────────────────────────────────────────────────────────────
 
 variable "bucket_name" {
   description = "Globally-unique S3 bucket name for website assets."
   type        = string
+
+  validation {
+    condition     = can(regex("^[a-z0-9][a-z0-9.-]{1,61}[a-z0-9]$", var.bucket_name))
+    error_message = "bucket_name must be 3-63 characters, lowercase letters, numbers, dots, or hyphens."
+  }
 }
 
 variable "index_document" {
   description = "Website index document."
   type        = string
   default     = "index.html"
+
+  validation {
+    condition     = length(trimspace(var.index_document)) > 0
+    error_message = "index_document must not be empty."
+  }
 }
 
 variable "error_document" {
   description = "Website error document (served on 4xx from origin)."
   type        = string
   default     = "index.html"
+
+  validation {
+    condition     = length(trimspace(var.error_document)) > 0
+    error_message = "error_document must not be empty."
+  }
 }
 
-# ── CloudFront ────────────────────────────────────────────────────────────────
+# ── CloudFront ──────────────────────────────────────────────────────────────
 
 variable "price_class" {
   description = "CloudFront price class. PriceClass_100 = US/EU only (cheapest)."
   type        = string
   default     = "PriceClass_100"
+
+  validation {
+    condition     = contains(["PriceClass_100", "PriceClass_200", "PriceClass_All"], var.price_class)
+    error_message = "price_class must be PriceClass_100, PriceClass_200, or PriceClass_All."
+  }
 }
 
 variable "default_ttl" {
   description = "Default TTL in seconds for cached objects."
   type        = number
   default     = 86400
+
+  validation {
+    condition     = var.default_ttl >= 0 && var.default_ttl <= var.max_ttl
+    error_message = "default_ttl must be between 0 and max_ttl."
+  }
 }
 
 variable "max_ttl" {
   description = "Maximum TTL in seconds for cached objects."
   type        = number
   default     = 31536000
+
+  validation {
+    condition     = var.max_ttl >= 0
+    error_message = "max_ttl must be zero or greater."
+  }
 }
 
 variable "compress" {
@@ -81,12 +116,17 @@ variable "custom_error_responses" {
   ]
 }
 
-# ── Route53 / ACM ─────────────────────────────────────────────────────────────
+# ── Route53 / ACM ────────────────────────────────────────────────────────────
 
 variable "domain_name" {
   description = "Primary domain name (e.g. example.com). Leave null to skip Route53/ACM."
   type        = string
   default     = null
+
+  validation {
+    condition     = var.domain_name == null || (var.hosted_zone_id != null && length(var.hosted_zone_id) > 0)
+    error_message = "hosted_zone_id is required when domain_name is set."
+  }
 }
 
 variable "aliases" {
